@@ -1,0 +1,268 @@
+[
+  {
+    "id": "331fddfb.2b61e2",
+    "type": "subflow",
+    "name": "Sesame API",
+    "info": "",
+    "category": "",
+    "in": [
+      {
+        "x": 30,
+        "y": 80,
+        "wires": [
+          {
+            "id": "36a1df93.8a455"
+          }
+        ]
+      }
+    ],
+    "out": [
+      {
+        "x": 1200,
+        "y": 80,
+        "wires": [
+          {
+            "id": "5b05cd2f.346fd4",
+            "port": 0
+          }
+        ]
+      }
+    ],
+    "env": [
+      {
+        "name": "URL",
+        "type": "str",
+        "value": "https://api.candyhouse.co/public",
+        "ui": {
+          "icon": "font-awesome/fa-cloud",
+          "label": {
+            "en-US": "Endpoint"
+          },
+          "type": "input",
+          "opts": {
+            "types": [
+              "str"
+            ]
+          }
+        }
+      },
+      {
+        "name": "KEY",
+        "type": "str",
+        "value": "",
+        "ui": {
+          "icon": "font-awesome/fa-key",
+          "label": {
+            "en-US": "API key"
+          },
+          "type": "input",
+          "opts": {
+            "types": [
+              "str"
+            ]
+          }
+        }
+      },
+      {
+        "name": "REQ",
+        "type": "str",
+        "value": "",
+        "ui": {
+          "icon": "font-awesome/fa-sign-out",
+          "label": {
+            "en-US": "Request"
+          },
+          "type": "select",
+          "opts": {
+            "opts": [
+              {
+                "l": {
+                  "en-US": "Lock"
+                },
+                "v": "LOCK"
+              },
+              {
+                "l": {
+                  "en-US": "Unlock"
+                },
+                "v": "UNLOCK"
+              },
+              {
+                "l": {
+                  "en-US": "Sync"
+                },
+                "v": "SYNC"
+              },
+              {
+                "l": {
+                  "en-US": "Status"
+                },
+                "v": "STATUS"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "DEV",
+        "type": "str",
+        "value": "",
+        "ui": {
+          "icon": "font-awesome/fa-unlock-alt",
+          "label": {
+            "en-US": "Device"
+          },
+          "type": "input",
+          "opts": {
+            "types": [
+              "str"
+            ]
+          }
+        }
+      }
+    ],
+    "meta": {},
+    "color": "#C7E9C0",
+    "icon": "font-awesome/fa-cloud"
+  },
+  {
+    "id": "266f8c52.64b584",
+    "type": "http request",
+    "z": "331fddfb.2b61e2",
+    "name": "api.candyhouse.co",
+    "method": "use",
+    "ret": "obj",
+    "paytoqs": true,
+    "url": "",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "authType": "",
+    "x": 510,
+    "y": 80,
+    "wires": [
+      [
+        "a4c41ed7.7421f"
+      ]
+    ]
+  },
+  {
+    "id": "6269ff95.ca699",
+    "type": "function",
+    "z": "331fddfb.2b61e2",
+    "name": "Action",
+    "func": "\n// 指定したニックネームのセサミのインデックス番号を探す\nfor(var i=0;i<msg.devices.length;i++){\n    if(msg.devices[i].nickname === env.get(\"DEV\")) break;\n}\n\n// 指定したニックネームのセサミが見つからない場合は最初のセサミを操作する\nif(i === msg.devices.length) i = 0;\n\nmsg.headers = {};\nmsg.headers['Authorization'] = env.get(\"KEY\");\nmsg.headers['Connection'] = \"close\";\n\nswitch(env.get(\"REQ\")){\n    case \"STATUS\":\n        msg.method = \"GET\";\n        msg.url = env.get(\"URL\") + \"/sesame/\" + msg.devices[i].device_id;\n        break;\n    case \"LOCK\":\n        msg.method = \"POST\";\n        msg.url = env.get(\"URL\") + \"/sesame/\" + msg.devices[i].device_id;\n        msg.headers['Content-Type'] = 'application/json';\n        msg.payload = '{\"command\":\"lock\"}';\n        break;\n    case \"UNLOCK\":\n        msg.method = \"POST\";\n        msg.url = env.get(\"URL\") + \"/sesame/\" + msg.devices[i].device_id;\n        msg.headers['Content-Type'] = 'application/json';\n        msg.payload = '{\"command\":\"unlock\"}';\n        break;\n    case \"SYNC\":\n        msg.method = \"POST\";\n        msg.url = env.get(\"URL\") + \"/sesame/\" + msg.devices[i].device_id;\n        msg.headers['Content-Type'] = 'application/json';\n        msg.payload = '{\"command\":\"sync\"}';\n        break;\n}\n\n\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 890,
+    "y": 80,
+    "wires": [
+      [
+        "5b05cd2f.346fd4"
+      ]
+    ]
+  },
+  {
+    "id": "11ff62ac.e0677d",
+    "type": "function",
+    "z": "331fddfb.2b61e2",
+    "name": "Get device list",
+    "func": "\nmsg.headers = {};\nmsg.headers['Authorization'] = env.get(\"KEY\");\nmsg.headers['Connection'] = \"close\";\nmsg.method = \"GET\";\nmsg.url = env.get(\"URL\") + \"/sesames\";\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 310,
+    "y": 80,
+    "wires": [
+      [
+        "266f8c52.64b584"
+      ]
+    ]
+  },
+  {
+    "id": "a4c41ed7.7421f",
+    "type": "change",
+    "z": "331fddfb.2b61e2",
+    "name": "",
+    "rules": [
+      {
+        "t": "move",
+        "p": "payload",
+        "pt": "msg",
+        "to": "devices",
+        "tot": "msg"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 720,
+    "y": 80,
+    "wires": [
+      [
+        "6269ff95.ca699"
+      ]
+    ]
+  },
+  {
+    "id": "5b05cd2f.346fd4",
+    "type": "http request",
+    "z": "331fddfb.2b61e2",
+    "name": "api.candyhouse.co",
+    "method": "use",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "authType": "",
+    "x": 1060,
+    "y": 80,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "36a1df93.8a455",
+    "type": "change",
+    "z": "331fddfb.2b61e2",
+    "name": "initialize",
+    "rules": [
+      {
+        "t": "delete",
+        "p": "payload",
+        "pt": "msg"
+      },
+      {
+        "t": "delete",
+        "p": "headers",
+        "pt": "msg"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 140,
+    "y": 80,
+    "wires": [
+      [
+        "11ff62ac.e0677d"
+      ]
+    ]
+  },
+  {
+    "id": "9a9c94bbc265ea84",
+    "type": "subflow:331fddfb.2b61e2",
+    "z": "c33d685b.315298",
+    "name": "",
+    "x": 970,
+    "y": 590,
+    "wires": [
+      []
+    ]
+  }
+]
