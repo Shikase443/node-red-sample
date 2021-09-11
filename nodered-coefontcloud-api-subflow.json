@@ -1,0 +1,410 @@
+[
+  {
+    "id": "adcdb07133d05fd7",
+    "type": "subflow",
+    "name": "CoeFont CLOUD",
+    "info": "## 入力\nmsg.textに発話するメッセージを入力してください。\n## 出力\nmsg.payloadにwavのバッファを返します。\nmsg.filenameにキャッシュしたファイル名が入ってます。",
+    "category": "",
+    "in": [
+      {
+        "x": 40,
+        "y": 90,
+        "wires": [
+          {
+            "id": "3c7782e46b28815d"
+          }
+        ]
+      }
+    ],
+    "out": [
+      {
+        "x": 1140,
+        "y": 60,
+        "wires": [
+          {
+            "id": "36d6572916c53322",
+            "port": 0
+          },
+          {
+            "id": "da6f369f0a52cd16",
+            "port": 0
+          },
+          {
+            "id": "3ff930c3c1786936",
+            "port": 0
+          }
+        ]
+      }
+    ],
+    "env": [
+      {
+        "name": "KEY",
+        "type": "str",
+        "value": "",
+        "ui": {
+          "icon": "font-awesome/fa-key",
+          "label": {
+            "en-US": "Access Key"
+          },
+          "type": "input",
+          "opts": {
+            "types": [
+              "str"
+            ]
+          }
+        }
+      },
+      {
+        "name": "SECRET",
+        "type": "cred",
+        "ui": {
+          "icon": "font-awesome/fa-user-secret",
+          "label": {
+            "en-US": "Client Secret"
+          }
+        }
+      },
+      {
+        "name": "COEFONT",
+        "type": "str",
+        "value": "33240884-bd28-46c0-820e-f30b16290e08",
+        "ui": {
+          "icon": "font-awesome/fa-address-book-o",
+          "label": {
+            "en-US": "coefont ID"
+          },
+          "type": "select",
+          "opts": {
+            "opts": [
+              {
+                "l": {
+                  "en-US": "あみたろ・ハキハキ(小春音アミ)"
+                },
+                "v": "33240884-bd28-46c0-820e-f30b16290e08"
+              },
+              {
+                "l": {
+                  "en-US": "あみたろ・にこやか(小春音アミ)"
+                },
+                "v": "256f7ef4-df68-48dd-b184-a7eda45ad393"
+              },
+              {
+                "l": {
+                  "en-US": "あみたろ・興奮(小春音アミ)"
+                },
+                "v": "4b9e484c-3c20-4d43-851d-e7c75312b1a2"
+              },
+              {
+                "l": {
+                  "en-US": "アリアル"
+                },
+                "v": "46a81787-af54-4a91-8c5b-3b597066294e"
+              },
+              {
+                "l": {
+                  "en-US": "ミリアル"
+                },
+                "v": "c28adf78-d67d-4588-a9a5-970a76ca6b07"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "SPEED",
+        "type": "num",
+        "value": "1.0",
+        "ui": {
+          "icon": "font-awesome/fa-forward",
+          "label": {
+            "en-US": "speed"
+          },
+          "type": "spinner",
+          "opts": {
+            "min": 0,
+            "max": 10
+          }
+        }
+      },
+      {
+        "name": "PITCH",
+        "type": "num",
+        "value": "0",
+        "ui": {
+          "icon": "font-awesome/fa-sort",
+          "label": {
+            "en-US": "pitch (x10)"
+          },
+          "type": "spinner",
+          "opts": {
+            "min": -300,
+            "max": 300
+          }
+        }
+      },
+      {
+        "name": "KUTEN",
+        "type": "num",
+        "value": "0.7",
+        "ui": {
+          "icon": "font-awesome/fa-spinner",
+          "label": {
+            "en-US": "kuten"
+          },
+          "type": "input",
+          "opts": {
+            "types": [
+              "num"
+            ]
+          }
+        }
+      },
+      {
+        "name": "TOTEN",
+        "type": "num",
+        "value": "0.4",
+        "ui": {
+          "icon": "font-awesome/fa-spinner",
+          "label": {
+            "en-US": "toten"
+          },
+          "type": "input",
+          "opts": {
+            "types": [
+              "num"
+            ]
+          }
+        }
+      },
+      {
+        "name": "VOLUME",
+        "type": "num",
+        "value": "1.0",
+        "ui": {
+          "icon": "font-awesome/fa-volume-up",
+          "label": {
+            "en-US": "volume"
+          },
+          "type": "spinner",
+          "opts": {
+            "min": 0,
+            "max": 5
+          }
+        }
+      },
+      {
+        "name": "INTONATION",
+        "type": "num",
+        "value": "1.0",
+        "ui": {
+          "icon": "font-awesome/fa-music",
+          "label": {
+            "en-US": "intonation"
+          },
+          "type": "spinner",
+          "opts": {
+            "min": 0,
+            "max": 2
+          }
+        }
+      },
+      {
+        "name": "URI",
+        "type": "str",
+        "value": "https://api.coefont.cloud/v1/text2speech",
+        "ui": {
+          "icon": "font-awesome/fa-globe",
+          "type": "input",
+          "opts": {
+            "types": [
+              "str"
+            ]
+          }
+        }
+      },
+      {
+        "name": "ERRVOICE",
+        "type": "str",
+        "value": "~/coefont/error.wav",
+        "ui": {
+          "icon": "font-awesome/fa-warning",
+          "label": {
+            "en-US": "Error voice"
+          },
+          "type": "input",
+          "opts": {
+            "types": [
+              "str"
+            ]
+          }
+        }
+      },
+      {
+        "name": "CACHEDIR",
+        "type": "str",
+        "value": "~/coefont/cache",
+        "ui": {
+          "icon": "font-awesome/fa-folder-open",
+          "label": {
+            "en-US": "Cache dir"
+          },
+          "type": "input",
+          "opts": {
+            "types": [
+              "str"
+            ]
+          }
+        }
+      },
+      {
+        "name": "APIドキュメント：https://docs.coefont.cloud/",
+        "type": "str",
+        "value": "",
+        "ui": {
+          "type": "none"
+        }
+      }
+    ],
+    "meta": {},
+    "credentials": {
+      "SECRET": ""
+    },
+    "color": "#3FADB5",
+    "icon": "font-awesome/fa-commenting"
+  },
+  {
+    "id": "c714d2a12696eeba",
+    "type": "switch",
+    "z": "adcdb07133d05fd7",
+    "name": "payload is buffer?",
+    "property": "payload",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "istype",
+        "v": "null",
+        "vt": "null"
+      },
+      {
+        "t": "istype",
+        "v": "buffer",
+        "vt": "buffer"
+      }
+    ],
+    "checkall": "false",
+    "repair": false,
+    "outputs": 2,
+    "x": 680,
+    "y": 120,
+    "wires": [
+      [
+        "36d6572916c53322"
+      ],
+      [
+        "3ff930c3c1786936"
+      ]
+    ]
+  },
+  {
+    "id": "7cb8f439e55c1230",
+    "type": "function",
+    "z": "adcdb07133d05fd7",
+    "name": "CoeFont CLOUD API call",
+    "func": "\nconst axios = new global.get('axios');\nconst crypto = new global.get('crypto');\n\nconst data = JSON.stringify({\n  'coefont': env.get(\"COEFONT\"),\n  'text': msg.text,\n  'speed': env.get(\"SPEED\"),\n  'pitch': env.get(\"PITCH\") * 10,\n  'kuten': env.get(\"KUTEN\"),\n  'toten': env.get(\"TOTEN\"),\n  'volume': env.get(\"VOLUME\"),\n  'intonation': env.get(\"INTONATION\")\n});\nconst date = String(Math.floor(Date.now() / 1000));\n\nconst signature = crypto.createHmac('sha256', env.get(\"SECRET\")).update(date+data).digest('hex')\n\naxios.post(env.get(\"URI\"), data, {\n    headers: {\n      'Content-Type': 'application/json',\n      'Authorization': env.get(\"KEY\"),\n      'X-Coefont-Date': date,\n      'X-Coefont-Content': signature\n    },\n    responseType: 'arraybuffer'\n  })\n  .then(response => {\n    msg.payload = new Buffer(response.data, \"binary\");\n  })\n  .catch(error => {\n    console.log(\"CoeFont CLOUD API error!\");\n    console.log(error);\n    msg.filename = env.get(\"ERRVOICE\")\n    msg.payload = null;\n  })\n  .finally(() => {\n    console.log(\"CoeFont CLOUD API done!\");\n    node.send(msg);\n  })\n\nreturn null;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 450,
+    "y": 120,
+    "wires": [
+      [
+        "c714d2a12696eeba"
+      ]
+    ]
+  },
+  {
+    "id": "3c7782e46b28815d",
+    "type": "function",
+    "z": "adcdb07133d05fd7",
+    "name": "use cache voice file?",
+    "func": "\nconst fs = new global.get('fs');\n\nmsg.filename = env.get(\"CACHEDIR\") + \"/\" + env.get(\"COEFONT\") + \"_\" + msg.text + \".wav\";\n\nif(fs.existsSync(msg.filename)){\n    console.log(\"Cache voice file detect.\");\n    return [ msg, null ];\n} else {\n    console.log(\"Using CoeFont CLOUD API...\");\n    return [ null, msg ];\n}\n\nreturn null;",
+    "outputs": 2,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 190,
+    "y": 90,
+    "wires": [
+      [
+        "da6f369f0a52cd16"
+      ],
+      [
+        "7cb8f439e55c1230"
+      ]
+    ]
+  },
+  {
+    "id": "da6f369f0a52cd16",
+    "type": "file in",
+    "z": "adcdb07133d05fd7",
+    "name": "cache voice file to buffer",
+    "filename": "",
+    "format": "",
+    "chunk": false,
+    "sendError": false,
+    "encoding": "none",
+    "allProps": false,
+    "x": 450,
+    "y": 60,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "36d6572916c53322",
+    "type": "file in",
+    "z": "adcdb07133d05fd7",
+    "name": "error voice file to buffer",
+    "filename": "",
+    "format": "",
+    "chunk": false,
+    "sendError": false,
+    "encoding": "none",
+    "allProps": false,
+    "x": 920,
+    "y": 90,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "3ff930c3c1786936",
+    "type": "file",
+    "z": "adcdb07133d05fd7",
+    "name": "save cache voice file",
+    "filename": "",
+    "appendNewline": false,
+    "createDir": false,
+    "overwriteFile": "true",
+    "encoding": "none",
+    "x": 910,
+    "y": 150,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "32ef15f192625169",
+    "type": "subflow:adcdb07133d05fd7",
+    "z": "c33d685b.315298",
+    "name": "",
+    "x": 930,
+    "y": 490,
+    "wires": [
+      []
+    ]
+  }
+]
