@@ -1,0 +1,165 @@
+[
+  {
+    "id": "32238322.9dad8c",
+    "type": "subflow",
+    "name": "今何時？",
+    "info": "\n**msg.hour**：時を代入します。(数値)\n\n**msg.min**：分を代入します。(数値)\n\n**msg.year**：年を代入します。(数値)\n\n**msg.month**：月を代入します。(数値)\n\n**msg.day**：日を代入します。(数値)\n\n**msg.dow**：曜日を代入します。(英語文字列)",
+    "category": "",
+    "in": [
+      {
+        "x": 60,
+        "y": 60,
+        "wires": [
+          {
+            "id": "82d3f0aa.7008e"
+          }
+        ]
+      }
+    ],
+    "out": [
+      {
+        "x": 480,
+        "y": 60,
+        "wires": [
+          {
+            "id": "fb2dc2fd8e339d6c",
+            "port": 0
+          }
+        ]
+      }
+    ],
+    "env": [
+      {
+        "name": "ZONE",
+        "type": "str",
+        "value": "+0900",
+        "ui": {
+          "icon": "font-awesome/fa-clock-o",
+          "label": {
+            "en-US": "タイムゾーン"
+          },
+          "type": "select",
+          "opts": {
+            "opts": [
+              {
+                "l": {
+                  "en-US": "Asia/Tokyo"
+                },
+                "v": "+0900"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "meta": {},
+    "color": "#C0DEED",
+    "icon": "font-awesome/fa-clock-o"
+  },
+  {
+    "id": "82d3f0aa.7008e",
+    "type": "change",
+    "z": "32238322.9dad8c",
+    "name": "",
+    "rules": [
+      {
+        "t": "set",
+        "p": "zone",
+        "pt": "msg",
+        "to": "ZONE",
+        "tot": "env"
+      },
+      {
+        "t": "set",
+        "p": "millis",
+        "pt": "msg",
+        "to": "$millis()",
+        "tot": "jsonata"
+      },
+      {
+        "t": "set",
+        "p": "hour",
+        "pt": "msg",
+        "to": "$number($fromMillis(millis,'[H01]',zone))",
+        "tot": "jsonata"
+      },
+      {
+        "t": "set",
+        "p": "min",
+        "pt": "msg",
+        "to": "$number($fromMillis(millis,'[m01]',zone))",
+        "tot": "jsonata"
+      },
+      {
+        "t": "set",
+        "p": "dow",
+        "pt": "msg",
+        "to": "$fromMillis(millis,'[F]',zone)",
+        "tot": "jsonata"
+      },
+      {
+        "t": "set",
+        "p": "year",
+        "pt": "msg",
+        "to": "$number($fromMillis(millis,'[Y]',zone))",
+        "tot": "jsonata"
+      },
+      {
+        "t": "set",
+        "p": "month",
+        "pt": "msg",
+        "to": "$number($fromMillis(millis,'[M]',zone))",
+        "tot": "jsonata"
+      },
+      {
+        "t": "set",
+        "p": "day",
+        "pt": "msg",
+        "to": "$number($fromMillis(millis,'[D]',zone))",
+        "tot": "jsonata"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 200,
+    "y": 60,
+    "wires": [
+      [
+        "fb2dc2fd8e339d6c"
+      ]
+    ]
+  },
+  {
+    "id": "fb2dc2fd8e339d6c",
+    "type": "function",
+    "z": "32238322.9dad8c",
+    "name": "",
+    "func": "\nif(msg.zone == \"+0900\"){\n    switch(msg.dow){\n        case \"monday\":\n            msg.dow = \"月曜日\";\n            break;\n        case \"tuesday\":\n            msg.dow = \"火曜日\";\n            break;\n        case \"wednesday\":\n            msg.dow = \"水曜日\";\n            break;\n        case \"thursday\":\n            msg.dow = \"木曜日\";\n            break;\n        case \"friday\":\n            msg.dow = \"金曜日\";\n            break;\n        case \"saturday\":\n            msg.dow = \"土曜日\";\n            break;\n        case \"sunday\":\n            msg.dow = \"日曜日\";\n            break;\n    }\n}\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 370,
+    "y": 60,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "5862eec4b2bb052e",
+    "type": "subflow:32238322.9dad8c",
+    "z": "a4d4599f.2cc268",
+    "name": "",
+    "x": 1310,
+    "y": 60,
+    "wires": [
+      [
+        "44ce6421a3e7204a"
+      ]
+    ]
+  }
+]
