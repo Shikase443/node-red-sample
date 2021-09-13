@@ -1,0 +1,271 @@
+[
+  {
+    "id": "b4c86637c0207749",
+    "type": "subflow",
+    "name": "天気予報",
+    "info": "",
+    "category": "",
+    "in": [
+      {
+        "x": 70,
+        "y": 100,
+        "wires": [
+          {
+            "id": "2140d7f89b0d8f15"
+          }
+        ]
+      }
+    ],
+    "out": [
+      {
+        "x": 840,
+        "y": 100,
+        "wires": [
+          {
+            "id": "7194061149d437d9",
+            "port": 0
+          }
+        ]
+      }
+    ],
+    "env": [
+      {
+        "name": "PREFIX",
+        "type": "str",
+        "value": "https://weather.tsukumijima.net/api/forecast/city/",
+        "ui": {
+          "icon": "font-awesome/fa-cloud",
+          "label": {
+            "en-US": "URI Prefix"
+          },
+          "type": "input",
+          "opts": {
+            "types": [
+              "str"
+            ]
+          }
+        }
+      },
+      {
+        "name": "CITY",
+        "type": "str",
+        "value": "140020",
+        "ui": {
+          "icon": "font-awesome/fa-map-marker",
+          "label": {
+            "en-US": "City"
+          },
+          "type": "select",
+          "opts": {
+            "opts": [
+              {
+                "l": {
+                  "en-US": "さいたま"
+                },
+                "v": "110010"
+              },
+              {
+                "l": {
+                  "en-US": "熊谷"
+                },
+                "v": "110020"
+              },
+              {
+                "l": {
+                  "en-US": "秩父"
+                },
+                "v": "110030"
+              },
+              {
+                "l": {
+                  "en-US": "千葉"
+                },
+                "v": "120010"
+              },
+              {
+                "l": {
+                  "en-US": "銚子"
+                },
+                "v": "120020"
+              },
+              {
+                "l": {
+                  "en-US": "館山"
+                },
+                "v": "120030"
+              },
+              {
+                "l": {
+                  "en-US": "東京"
+                },
+                "v": "130010"
+              },
+              {
+                "l": {
+                  "en-US": "大島"
+                },
+                "v": "130020"
+              },
+              {
+                "l": {
+                  "en-US": "八丈島"
+                },
+                "v": "130030"
+              },
+              {
+                "l": {
+                  "en-US": "父島"
+                },
+                "v": "130040"
+              },
+              {
+                "l": {
+                  "en-US": "横浜"
+                },
+                "v": "140010"
+              },
+              {
+                "l": {
+                  "en-US": "小田原"
+                },
+                "v": "140020"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "https://weather.tsukumijima.net/",
+        "type": "str",
+        "value": "",
+        "ui": {
+          "type": "none"
+        }
+      }
+    ],
+    "meta": {},
+    "color": "#C0DEED",
+    "icon": "font-awesome/fa-sun-o"
+  },
+  {
+    "id": "2140d7f89b0d8f15",
+    "type": "change",
+    "z": "b4c86637c0207749",
+    "name": "",
+    "rules": [
+      {
+        "t": "set",
+        "p": "url",
+        "pt": "msg",
+        "to": "PREFIX",
+        "tot": "env"
+      },
+      {
+        "t": "change",
+        "p": "url",
+        "pt": "msg",
+        "from": "$",
+        "fromt": "re",
+        "to": "CITY",
+        "tot": "env"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 200,
+    "y": 100,
+    "wires": [
+      [
+        "568db4fe945ec923"
+      ]
+    ]
+  },
+  {
+    "id": "568db4fe945ec923",
+    "type": "http request",
+    "z": "b4c86637c0207749",
+    "name": "",
+    "method": "GET",
+    "ret": "txt",
+    "paytoqs": "ignore",
+    "url": "",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "authType": "",
+    "x": 380,
+    "y": 100,
+    "wires": [
+      [
+        "d5d6cfea710a65e3"
+      ]
+    ]
+  },
+  {
+    "id": "d5d6cfea710a65e3",
+    "type": "json",
+    "z": "b4c86637c0207749",
+    "name": "",
+    "property": "payload",
+    "action": "obj",
+    "pretty": false,
+    "x": 530,
+    "y": 100,
+    "wires": [
+      [
+        "7194061149d437d9"
+      ]
+    ]
+  },
+  {
+    "id": "7194061149d437d9",
+    "type": "change",
+    "z": "b4c86637c0207749",
+    "name": "",
+    "rules": [
+      {
+        "t": "set",
+        "p": "weather",
+        "pt": "msg",
+        "to": "payload.forecasts.0.detail.weather",
+        "tot": "msg"
+      },
+      {
+        "t": "delete",
+        "p": "payload",
+        "pt": "msg"
+      },
+      {
+        "t": "delete",
+        "p": "headers",
+        "pt": "msg"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 690,
+    "y": 100,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "178618cabd73c491",
+    "type": "subflow:b4c86637c0207749",
+    "z": "c33d685b.315298",
+    "name": "",
+    "x": 500,
+    "y": 1210,
+    "wires": [
+      [
+        "9f1e1f8f4eae7648"
+      ]
+    ]
+  }
+]
