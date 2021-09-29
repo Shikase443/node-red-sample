@@ -19,3 +19,14 @@ https://qiita.com/Y-Shikase/items/fc02b4b8543bc2118c2c
 - nodered-weather-tsukumijima.json (天気予報API by tsukumijima)  
 https://weather.tsukumijima.net/ さんで公開されている天気予報APIをNode-REDで簡単に使うためのサブフローです。  
 主にTTS(Text-to-Speach)で発話させるために特定の箇所だけ利用しています。
+
+- nodered-line-signature-check.json (LINE Messaging API用署名検証サブフロー)  
+LINEからのwebhookエンドポイント(http-inノード)の直後に設置してください。  
+署名一致、不一致後の動作はおまかせします。署名一致の場合、msg.replytokenにreplyMessage用のreplytokenを保存します。  
+
+- nodered-line-api-subflow.json (LINE Messaging APIサブフロー)  
+ReplyとPushに対応しています。replyMessage時には上述の署名検証サブフローを通しておくと、msg.replytokenの設定は不要です。  
+msg.payloadにメッセージのJSONオブジェクトを指定してください。  
+テキスト、位置情報、音声メッセージでの動作は確認しています。  
+https://developers.line.biz/ja/reference/messaging-api/#messages  
+(※単一メッセージにしか対応しておりません。)
