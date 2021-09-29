@@ -1,0 +1,249 @@
+[
+    {
+        "id": "68423d67b682d118",
+        "type": "subflow",
+        "name": "LINE API",
+        "info": "# 入力\nmsg.payloadにLINEのメッセージオブジェクトをJSONオブジェクトで設定してください。JSONテキスト形式でも可。  \nhttps://developers.line.biz/ja/reference/messaging-api/#message-objects",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "fabc5a622f29b1ac"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 840,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "28bdc9a212d17da9",
+                        "port": 0
+                    },
+                    {
+                        "id": "b3186155078e6d16",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "METHOD",
+                "type": "str",
+                "value": "PUSH",
+                "ui": {
+                    "icon": "font-awesome/fa-cubes",
+                    "label": {
+                        "en-US": "Method"
+                    },
+                    "type": "select",
+                    "opts": {
+                        "opts": [
+                            {
+                                "l": {
+                                    "en-US": "replyMessage"
+                                },
+                                "v": "REPLY"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "pushMessage"
+                                },
+                                "v": "PUSH"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "SECRET",
+                "type": "cred",
+                "ui": {
+                    "icon": "font-awesome/fa-key",
+                    "label": {
+                        "en-US": "Secret"
+                    }
+                }
+            },
+            {
+                "name": "TOKEN",
+                "type": "cred",
+                "ui": {
+                    "icon": "font-awesome/fa-tag",
+                    "label": {
+                        "en-US": "Token"
+                    }
+                }
+            },
+            {
+                "name": "USER",
+                "type": "str",
+                "value": "",
+                "ui": {
+                    "icon": "font-awesome/fa-user",
+                    "label": {
+                        "en-US": "User ID"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "replyMessageは「Token」のみの設定",
+                "type": "str",
+                "value": "",
+                "ui": {
+                    "type": "none"
+                }
+            }
+        ],
+        "meta": {},
+        "color": "#87A980",
+        "icon": "font-awesome/fa-comment"
+    },
+    {
+        "id": "28bdc9a212d17da9",
+        "type": "function",
+        "z": "68423d67b682d118",
+        "name": "",
+        "func": "\nconst line = new lineBotSdk.Client({\n    channelSecret: env.get(\"SECRET\"),\n    channelAccessToken: env.get(\"TOKEN\")\n});\n \nline.pushMessage(env.get(\"USER\"), msg.payload);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "lineBotSdk",
+                "module": "@line/bot-sdk"
+            }
+        ],
+        "x": 620,
+        "y": 110,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e57da7be72a3fd15",
+        "type": "switch",
+        "z": "68423d67b682d118",
+        "name": "",
+        "property": "METHOD",
+        "propertyType": "env",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "REPLY",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "PUSH",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 470,
+        "y": 80,
+        "wires": [
+            [
+                "b3186155078e6d16"
+            ],
+            [
+                "28bdc9a212d17da9"
+            ]
+        ]
+    },
+    {
+        "id": "b3186155078e6d16",
+        "type": "function",
+        "z": "68423d67b682d118",
+        "name": "",
+        "func": "\nconst line = new lineBotSdk.Client({\n    channelAccessToken: env.get(\"TOKEN\")\n});\n \nline.replyMessage(msg.replytoken, msg.payload);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "lineBotSdk",
+                "module": "@line/bot-sdk"
+            }
+        ],
+        "x": 620,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fabc5a622f29b1ac",
+        "type": "switch",
+        "z": "68423d67b682d118",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "istype",
+                "v": "object",
+                "vt": "object"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 160,
+        "y": 80,
+        "wires": [
+            [
+                "e57da7be72a3fd15"
+            ],
+            [
+                "18b34e05e31ce8de"
+            ]
+        ]
+    },
+    {
+        "id": "18b34e05e31ce8de",
+        "type": "json",
+        "z": "68423d67b682d118",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 300,
+        "y": 110,
+        "wires": [
+            [
+                "e57da7be72a3fd15"
+            ]
+        ]
+    },
+    {
+        "id": "0a1eb275d6bfa43c",
+        "type": "subflow:68423d67b682d118",
+        "z": "4351afa52529e750",
+        "name": "",
+        "x": 1770,
+        "y": 760,
+        "wires": [
+            []
+        ]
+    }
+]
