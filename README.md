@@ -23,7 +23,7 @@ https://weather.tsukumijima.net/ さんで公開されている天気予報API�
 - nodered-line-signature-check.json (LINE Messaging API用署名検証サブフロー)  
 LINEからのwebhookエンドポイント(http-inノード)の直後に設置してください。  
 署名一致、不一致後の動作はおまかせします。署名一致の場合、msg.replytokenにreplyMessage用のreplytokenを保存します。  
-また、「functionExternalModules(https://nodered.jp/blog/2021/04/08/version-1-3-released#function-node-use-of-npm-modules)」を利用しています。  
+また、「functionExternalModules」を利用しています。  
 
 - nodered-line-api-subflow.json (LINE Messaging APIサブフロー)  
 ReplyとPushに対応しています。replyMessage時には上述の署名検証サブフローを通しておくと、msg.replytokenの設定は不要です。  
@@ -32,4 +32,6 @@ msg.payloadにメッセージのJSONオブジェクトを指定してくださ�
 https://developers.line.biz/ja/reference/messaging-api/#messages  
 (※単一メッセージにしか対応しておりません。)  
 また、「functionExternalModules」を利用しています。  
+
+「functionExternalModules」については以下を参照してください。  
 https://nodered.jp/blog/2021/04/08/version-1-3-released#function-node-use-of-npm-modules  
