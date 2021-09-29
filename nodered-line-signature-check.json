@@ -1,0 +1,186 @@
+[
+    {
+        "id": "a9e4435cbdef79c3",
+        "type": "subflow",
+        "name": "LINE署名検証",
+        "info": "# 入力\nmsg.payloadにwebhookで受信したペイロードを設定してください。\n\n# 出力\nmsg.replytokenにreplyMessage用のtokenを保存します。",
+        "category": "",
+        "in": [
+            {
+                "x": 70,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "5b6bfe655d813335"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 960,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "701990748ff77668",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 690,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "ab1009e596af2e7a",
+                        "port": 1
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "CHSECRET",
+                "type": "cred",
+                "ui": {
+                    "icon": "font-awesome/fa-key",
+                    "label": {
+                        "en-US": "Ch. secret"
+                    }
+                }
+            }
+        ],
+        "meta": {
+            "license": "MIT"
+        },
+        "credentials": {
+            "CHSECRET": ""
+        },
+        "color": "#87A980",
+        "outputLabels": [
+            "署名一致",
+            "署名不一致"
+        ],
+        "icon": "font-awesome/fa-comment"
+    },
+    {
+        "id": "32fecf71f2e5ccb5",
+        "type": "function",
+        "z": "a9e4435cbdef79c3",
+        "name": "署名検証",
+        "func": "\nconst channelSecret = env.get(\"CHSECRET\");\nconst body = msg.payload;\nconst signature = crypto\n  .createHmac('SHA256', channelSecret)\n  .update(body).digest('base64');\n\nif(signature === msg.req.headers['x-line-signature']){\n    msg.signature = true;\n} else {\n    msg.signature = false;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "crypto",
+                "module": "crypto"
+            }
+        ],
+        "x": 340,
+        "y": 80,
+        "wires": [
+            [
+                "ab1009e596af2e7a"
+            ]
+        ]
+    },
+    {
+        "id": "5b6bfe655d813335",
+        "type": "json",
+        "z": "a9e4435cbdef79c3",
+        "name": "",
+        "property": "payload",
+        "action": "str",
+        "pretty": false,
+        "x": 200,
+        "y": 80,
+        "wires": [
+            [
+                "32fecf71f2e5ccb5"
+            ]
+        ]
+    },
+    {
+        "id": "ab1009e596af2e7a",
+        "type": "switch",
+        "z": "a9e4435cbdef79c3",
+        "name": "正しい?",
+        "property": "signature",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 490,
+        "y": 80,
+        "wires": [
+            [
+                "56619dbd0f16ad3a"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "56619dbd0f16ad3a",
+        "type": "json",
+        "z": "a9e4435cbdef79c3",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 650,
+        "y": 60,
+        "wires": [
+            [
+                "701990748ff77668"
+            ]
+        ]
+    },
+    {
+        "id": "701990748ff77668",
+        "type": "change",
+        "z": "a9e4435cbdef79c3",
+        "name": "Reply Token退避",
+        "rules": [
+            {
+                "t": "set",
+                "p": "replytoken",
+                "pt": "msg",
+                "to": "payload.events.0.replyToken",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 820,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f5769deaee5b38b6",
+        "type": "subflow:a9e4435cbdef79c3",
+        "z": "4351afa52529e750",
+        "name": "",
+        "x": 1690,
+        "y": 620,
+        "wires": [
+            [],
+            []
+        ]
+    }
+]
